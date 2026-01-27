@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QuickLoan.Application.Handlers.Queries
+namespace QuickLoan.Application.Queries
 {
     public class GetAllLoansQuery : IRequest<List<LoanApplicationDto>>
     {

@@ -1,31 +1,53 @@
-﻿using MediatR;
+using MediatR;
 using QuickLoan.Application.DTOs;
 using QuickLoan.Application.Interfaces;
 using QuickLoan.Application.Queries;
 using QuickLoan.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace QuickLoan.Application.Handlers.Queries
+namespace QuickLoan.Application.Handlers.Queries;
+
+public class GetUserLoansQueryHandler : IRequestHandler<GetUserLoansQuery, List<LoanApplicationDto>>
 {
-    public class GetUserLoansQueryHandler : IRequestHandler<GetUserLoansQuery, List<LoanApplicationDto>>
+    private readonly ILoanApplicationRepository _loanRepo;
+
+    public GetUserLoansQueryHandler(ILoanApplicationRepository loanRepo)
     {
-        private readonly ILoanApplicationRepository _loanRepo;
+        _loanRepo = loanRepo;
+    }
 
-        public GetUserLoansQueryHandler(ILoanApplicationRepository loanRepo)
-        {
-            _loanRepo = loanRepo;
-        }
+    public async Task<List<LoanApplicationDto>> Handle(GetUserLoansQuery request, CancellationToken cancellationToken)
+    {
+        var applications = await _loanRepo.GetUserLoansAsync(request.UserId);
+        
+        return applications.Select(MapToDto).ToList();
+    }
 
-        public async Task<List<LoanApplicationDto>> Handle(GetUserLoansQuery request, CancellationToken cancellationToken)
+    private static LoanApplicationDto MapToDto(LoanApplication app)
+    {
+        return new LoanApplicationDto
         {
-            var applications = await _loanRepo.GetUserLoansAsync(request.UserId);
-            return applications.Select(MapToDto).ToList();
-        }
-
-        private LoanApplicationDto MapToDto(LoanApplication app)
-        {
-        }
+            Id = app.Id,
+            UserId = app.UserId,
+            ApplicationUrl = app.ApplicationUrl,
+            Title = app.Title.ToString(),
+            FirstName = app.FirstName,
+            LastName = app.LastName,
+            DateOfBirth = app.DateOfBirth,
+            Mobile = app.Mobile,
+            Email = app.Email,
+            AmountRequired = app.AmountRequired,
+            Term = app.Term,
+            ProductType = app.ProductType.ToString(),
+            MonthlyRepayment = app.MonthlyRepayment,
+            EstablishmentFee = app.EstablishmentFee,
+            TotalInterest = app.TotalInterest,
+            TotalRepayment = app.TotalRepayment,
+            Status = app.Status.ToString(),
+            CreatedAt = app.CreatedAt,
+            UpdatedAt = app.UpdatedAt,
+            SubmittedAt = app.SubmittedAt,
+            ProcessedAt = app.ProcessedAt,
+            AdminNotes = app.AdminNotes
+        };
     }
 }

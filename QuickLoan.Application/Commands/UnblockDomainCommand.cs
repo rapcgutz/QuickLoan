@@ -5,11 +5,8 @@ using System.Text;
 
 namespace QuickLoan.Application.Commands
 {
-    public class BlockDomainCommand : IRequest<Unit>
+    public class UnblockDomainCommand : IRequest<Unit>
     {
         public string Domain { get; set; } = string.Empty;
-        public Guid AdminUserId { get; set; }
-        public string? Reason { get; set; }
-
     }
 }

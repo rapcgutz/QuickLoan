@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using QuickLoan.Api.Models;
 using QuickLoan.Application.Commands;
 using QuickLoan.Application.Handlers.Queries;
+using QuickLoan.Application.Queries;
 using QuickLoan.Domain.Entities;
 using QuickLoan.Domain.Enums;
 using System.Security.Claims;

@@ -1,13 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using QuickLoan.Application.Interfaces;
-using QuickLoan.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using QuickLoan.Application.Interfaces;
+using QuickLoan.Domain.Entities;
 
 namespace QuickLoan.Infrastructure.Services
 {

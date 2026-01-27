@@ -9,5 +9,9 @@ namespace QuickLoan.Application.Queries
     public class GetLoanApplicationByUrlQuery : IRequest<LoanApplicationDto>
     {
         public string ApplicationUrl { get; set; } = string.Empty;
+        public Guid Id { get; set; }
+        public Guid RequestingUserId { get; set; }
+        public bool IsAdmin { get; set; }
+
     }
 }

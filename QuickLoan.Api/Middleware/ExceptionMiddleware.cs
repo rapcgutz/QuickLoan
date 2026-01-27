@@ -1,65 +1,75 @@
-﻿using QuickLoan.Api.Models;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
+using QuickLoan.Api.Models;
 
-namespace QuickLoan.Api.Middleware
+namespace QuickLoan.Api.Middleware;
+
+public class ExceptionMiddleware
 {
-    public class ExceptionMiddleware
+    private readonly RequestDelegate _next;
+    private readonly ILogger<ExceptionMiddleware> _logger;
+    private readonly IHostEnvironment _env;
+
+    public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IHostEnvironment env)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionMiddleware> _logger;
+        _next = next;
+        _logger = logger;
+        _env = env;
+    }
 
-        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
         {
-            _next = next;
-            _logger = logger;
+            await _next(context);
         }
-
-        public async Task InvokeAsync(HttpContext context)
+        catch (Exception ex)
         {
-            try
+            _logger.LogError(ex, "An error occurred: {Message}", ex.Message);
+            await HandleExceptionAsync(context, ex);
+        }
+    }
+
+    private Task HandleExceptionAsync(HttpContext context, Exception exception)
+    {
+        context.Response.ContentType = "application/json";
+
+        var errorResponse = exception switch
+        {
+            UnauthorizedAccessException => new ErrorResponse
             {
-                await _next(context);
+                StatusCode = (int)HttpStatusCode.Unauthorized,
+                Message = exception.Message,
+                Details = _env.IsDevelopment() ? exception.StackTrace : null
+            },
+            InvalidOperationException => new ErrorResponse
+            {
+                StatusCode = (int)HttpStatusCode.BadRequest,
+                Message = exception.Message,
+                Details = _env.IsDevelopment() ? exception.StackTrace : null
+            },
+            ArgumentException => new ErrorResponse
+            {
+                StatusCode = (int)HttpStatusCode.BadRequest,
+                Message = exception.Message,
+                Details = _env.IsDevelopment() ? exception.StackTrace : null
+            },
+            _ => new ErrorResponse
+            {
+                StatusCode = (int)HttpStatusCode.InternalServerError,
+                Message = _env.IsDevelopment() ? exception.Message : "An error occurred while processing your request",
+                Details = _env.IsDevelopment() ? exception.StackTrace : null
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred: {Message}", ex.Message);
-                await HandleExceptionAsync(context, ex);
-            }
-        }
+        };
 
-        private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        context.Response.StatusCode = errorResponse.StatusCode;
+
+        var options = new JsonSerializerOptions
         {
-            context.Response.ContentType = "application/json";
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
 
-            var errorResponse = exception switch
-            {
-                UnauthorizedAccessException => new ErrorResponse
-                {
-                    StatusCode = (int)HttpStatusCode.Unauthorized,
-                    Message = exception.Message
-                },
-                InvalidOperationException => new ErrorResponse
-                {
-                    StatusCode = (int)HttpStatusCode.BadRequest,
-                    Message = exception.Message
-                },
-                ArgumentException => new ErrorResponse
-                {
-                    StatusCode = (int)HttpStatusCode.BadRequest,
-                    Message = exception.Message
-                },
-                _ => new ErrorResponse
-                {
-                    StatusCode = (int)HttpStatusCode.InternalServerError,
-                    Message = "An error occurred while processing your request"
-                }
-            };
-
-            context.Response.StatusCode = errorResponse.StatusCode;
-
-            var json = JsonSerializer.Serialize(errorResponse);
-            await context.Response.WriteAsync(json);
-        }
+        var json = JsonSerializer.Serialize(errorResponse, options);
+        return context.Response.WriteAsync(json);
     }
 }
