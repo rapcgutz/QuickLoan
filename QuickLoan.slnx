@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="QuickLoan.Domain\QuickLoan.Domain.csproj" />
+  <Project Path="QuickLoan.Application\QuickLoan.Application.csproj" />
+  <Project Path="QuickLoan.Infrastructure\QuickLoan.Infrastructure.csproj" />
+  <Project Path="QuickLoan.Api\QuickLoan.Api.csproj" />
+</Solution>
