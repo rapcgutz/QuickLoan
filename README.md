@@ -85,71 +85,8 @@ dotnet run
 
 5. Navigate to `https://localhost:5001` (or your configured port)
 
-## Project Structure
-```
-QuickLoan.Web/
-├── Controllers/
-│   ├── AdminController.cs
-│   └── LoanController.cs
-├── Views/
-│   ├── Admin/
-│   │   ├── LoanApplications.cshtml
-│   │   └── Dashboard.cshtml
-│   └── Loan/
-│       ├── Apply.cshtml
-│       └── Details.cshtml
-├── Models/
-│   └── LoanApplicationResponse.cs
-└── wwwroot/
-    ├── css/
-    └── js/
-```
-
-## Usage
-
-### Admin Actions
-
-#### Approving a Loan
-1. Navigate to Loan Applications page
-2. Find the pending application
-3. Click "Approve" button
-4. Add optional admin notes
-5. Confirm approval
-
-#### Rejecting a Loan
-1. Navigate to Loan Applications page
-2. Find the pending application
-3. Click "Reject" button
-4. Enter rejection reason
-5. Confirm rejection
-
-#### Viewing Details
-1. Click "View Details" button on any application
-2. Review complete application information
-3. View guarantor details (if applicable)
-4. Check admin notes and history
-
-## Models
-
-### LoanApplicationResponse
-```csharp
-public class LoanApplicationResponse
-{
-    public int Id { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Email { get; set; }
-    public string Mobile { get; set; }
-    public decimal AmountRequired { get; set; }
-    public int Term { get; set; }
-    public string ProductType { get; set; }
-    public decimal MonthlyRepayment { get; set; }
-    public string Status { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public string AdminNotes { get; set; }
-    // Additional properties...
-}
-```
+## Solutions Structure
+<img width="349" height="190" alt="image" src="https://github.com/user-attachments/assets/53a61997-8dfb-44d4-9f15-acb552069001" />
 
 ## API Endpoints
 
