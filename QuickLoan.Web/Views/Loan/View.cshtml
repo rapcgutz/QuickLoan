@@ -1,0 +1,66 @@
+@model LoanApplicationResponse
+@{
+    ViewData["Title"] = "View Loan";
+    Layout = "_Layout";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="quote-result-card">
+                <h2 class="quote-result-title">Your loan application</h2>
+                
+                <!-- Finance Details -->
+                <div class="info-section">
+                    <div class="section-header">
+                        <span class="section-title">Finance details</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Finance amount</span>
+                        <div class="text-end">
+                            <span class="info-value-highlight">$@Model.AmountRequired.ToString("N0")</span>
+                            <span class="info-value-small">over @Model.Term months</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Product type</span>
+                        <span class="info-value">@Model.ProductType</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Monthly repayment</span>
+                        <div class="text-end">
+                            <span class="info-value-highlight">$@Model.MonthlyRepayment.ToString("N2")</span>
+                            <span class="info-value-small">per month</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Total repayment</span>
+                        <span class="info-value fw-bold">$@Model.TotalRepayment.ToString("N2")</span>
+                    </div>
+                </div>
+
+                <!-- Apply Button -->
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Loan" asp-action="Dashboard" class="btn btn-primary btn-block">
+                        Go to My Loans
+                    </a>
+                }
+                else
+                {
+                    <div class="text-center mt-4">
+                        <p style="color: #757575; margin-bottom: 1rem;">Want to continue with this application?</p>
+                        <a asp-controller="Auth" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="btn btn-primary">
+                            Login or Register
+                        </a>
+                    </div>
+                }
+                
+                <p class="disclaimer">
+                    Total repayments $@Model.TotalRepayment.ToString("N2"), made up of an establishment fee of $@Model.EstablishmentFee.ToString("N2").
+                    Interest of $@Model.TotalInterest.ToString("N2"). The repayment amount is based on the variables selected.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

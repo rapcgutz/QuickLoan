@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using QuickLoan.Application.Interfaces;
 using QuickLoan.Domain.Entities;
 using QuickLoan.Domain.Enums;
@@ -12,10 +13,12 @@ namespace QuickLoan.Infrastructure.Repositories
     public class LoanApplicationRepository : ILoanApplicationRepository
     {
         private readonly QuickLoanDbContext _context;
+        private readonly ILogger<LoanApplicationRepository> _logger;
 
-        public LoanApplicationRepository(QuickLoanDbContext context)
+        public LoanApplicationRepository(QuickLoanDbContext context, ILogger<LoanApplicationRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<LoanApplication?> GetByIdAsync(Guid id)
@@ -59,8 +62,33 @@ namespace QuickLoan.Infrastructure.Repositories
 
         public async Task<Guid> AddAsync(LoanApplication application)
         {
-            await _context.LoanApplications.AddAsync(application);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _logger.LogInformation("Adding loan: UserId={UserId}, Amount={Amount}, Status={Status}", application.UserId, application.AmountRequired, application.Status);
+
+                if (application.UserId == Guid.Empty)
+                {
+                    _logger.LogError("UserId is EMPTY!");
+                    throw new InvalidOperationException("UserId cannot be empty");
+                }
+
+                await _context.LoanApplications.AddAsync(application);
+
+                var result = await _context.SaveChangesAsync();
+
+                _logger.LogInformation("SaveChanges result: {Result} rows affected", result);
+
+                if (result == 0)
+                {
+                    _logger.LogError("NO ROWS SAVED!");
+                }
+
+                return application.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception: on AddAsync() - {ex.InnerException}");
+            }
             return application.Id;
         }
 

@@ -33,17 +33,19 @@ namespace QuickLoan.Application.Handlers.Queries
 
         public async Task<QuotationDto> Handle(CalculateQuotationQuery request, CancellationToken cancellationToken)
         {
+
             // Validate age
             if (!User.IsAtLeast18YearsOld(request.DateOfBirth))
                 throw new InvalidOperationException("Applicant must be at least 18 years old");
 
             // Check blacklists
-            if (await _blacklistRepo.IsMobileBlacklistedAsync(request.Mobile))
-                throw new InvalidOperationException("Mobile number is blacklisted");
 
             var emailDomain = request.Email.Split('@')[1];
+            if (await _blacklistRepo.IsMobileBlacklistedAsync(request.Mobile))
+                throw new InvalidOperationException("The mobile number you entered cannot be used for this application.");
+
             if (await _blacklistRepo.IsDomainBlacklistedAsync(emailDomain))
-                throw new InvalidOperationException("Email domain is blacklisted");
+                throw new InvalidOperationException("The Email domain you entered cannot be used for this application.");
 
             // Validate Product B minimum term
             if (request.ProductType == ProductType.ProductB && request.Term < 6)
@@ -68,7 +70,8 @@ namespace QuickLoan.Application.Handlers.Queries
                     request.AmountRequired,
                     request.Term,
                     request.ProductType,
-                    applicationUrl);
+                    applicationUrl,
+                    existingApplication?.UserId);
 
                 // Calculate quotation
                 var quotation = _quotationService.Calculate(request.AmountRequired, request.Term, request.ProductType);

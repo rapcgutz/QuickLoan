@@ -15,26 +15,37 @@ namespace QuickLoan.Application.Handlers.Commands
         private readonly IUserRepository _userRepo;
         private readonly IAuthService _authService;
         private readonly IRefreshTokenRepository _refreshTokenRepo;
+        private readonly IBlacklistRepository _blacklistRepo;
+
 
         public RegisterUserCommandHandler(
             IUserRepository userRepo,
             IAuthService authService,
-            IRefreshTokenRepository refreshTokenRepo)
+            IRefreshTokenRepository refreshTokenRepo,
+            IBlacklistRepository blacklistRepo)
         {
             _userRepo = userRepo;
             _authService = authService;
             _refreshTokenRepo = refreshTokenRepo;
+            _blacklistRepo = blacklistRepo;
         }
 
         public async Task<TokenDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
             // Check if email already exists
             if (await _userRepo.EmailExistsAsync(request.Email))
-                throw new InvalidOperationException("Email already registered");
+            throw new InvalidOperationException("Email already registered");
 
             // Validate age
             if (!User.IsAtLeast18YearsOld(request.DateOfBirth))
                 throw new InvalidOperationException("User must be at least 18 years old");
+
+            if (await _blacklistRepo.IsMobileBlacklistedAsync(request.Mobile))
+                throw new InvalidOperationException("The mobile number you entered cannot be used for this application.");
+
+            var emailDomain = request.Email.Split('@')[1];
+            if (await _blacklistRepo.IsDomainBlacklistedAsync(emailDomain))
+                throw new InvalidOperationException("The Email domain you entered cannot be used for this application.");
 
             // Hash password
             var passwordHash = _authService.HashPassword(request.Password);

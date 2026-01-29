@@ -6,8 +6,11 @@ using Microsoft.OpenApi.Models;
 using QuickLoan.Api.Filters;
 using QuickLoan.Api.Middleware;
 using QuickLoan.Application;
+using QuickLoan.Application.Interfaces;
+using QuickLoan.Application.Queries;
 using QuickLoan.Infrastructure;
 using QuickLoan.Infrastructure.Data;
+using QuickLoan.Infrastructure.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +42,9 @@ builder.Services.AddSwaggerGen(c =>
     // Apply security globally - simplified version
     c.OperationFilter<AuthorizeOperationFilter>();
 });
+
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(GetAllLoansQuery).Assembly));
 
 // CORS - Allow all for development
 builder.Services.AddCors(options =>
@@ -80,6 +86,8 @@ builder.Services.AddAuthorization();
 // Application & Infrastructure layers
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 var app = builder.Build();
 

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using QuickLoan.Api.Models;
 using QuickLoan.Application.Commands;
@@ -12,7 +13,7 @@ namespace QuickLoan.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "StandardUser,Admin")]
+    [Authorize]
     public class LoanApplicationController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -29,7 +30,6 @@ namespace QuickLoan.Api.Controllers
 
             var command = new CreateLoanApplicationCommand
             {
-                UserId = userId,
                 AmountRequired = request.AmountRequired,
                 Term = request.Term,
                 ProductType = Enum.Parse<ProductType>(request.ProductType),
@@ -42,7 +42,7 @@ namespace QuickLoan.Api.Controllers
             };
 
             var applicationId = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetLoanApplication), new { id = applicationId }, new { id = applicationId });
+            return Ok(new ApiResponse<object>(new { id = applicationId }));
         }
 
         [HttpGet("my-loans")]

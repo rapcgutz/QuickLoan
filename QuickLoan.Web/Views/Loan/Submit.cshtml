@@ -1,0 +1,138 @@
+@model LoanApplicationRequest
+@{
+    ViewData["Title"] = "Submit Loan Application";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="quote-calculator-card">
+                <h2 class="quote-calculator-title">Submit Your Loan Application</h2>
+                
+                <form asp-action="Submit" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    
+                    <!-- Amount Required Slider -->
+                    <div class="range-slider-container">
+                        <div class="text-center">
+                            <span class="range-value" id="amountDisplay">$@Model.AmountRequired.ToString("N0")</span>
+                        </div>
+                        <input type="range" 
+                               class="range-slider" 
+                               id="amountSlider"
+                               asp-for="AmountRequired"
+                               min="2100" 
+                               max="15000" 
+                               step="100" 
+                               value="@Model.AmountRequired"
+                               oninput="updateAmount(this.value)" />
+                        <div class="range-labels">
+                            <span>$2,100</span>
+                            <span style="color: #757575;">How much do you need?</span>
+                            <span>$15,000</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Term Selector -->
+                    <div class="mb-4">
+                        <label asp-for="Term" class="form-label">Loan term (months)</label>
+                        <select asp-for="Term" class="form-control form-select">
+                            <option value="6">6 months</option>
+                            <option value="12">12 months</option>
+                            <option value="18">18 months</option>
+                            <option value="24">24 months</option>
+                            <option value="36">36 months</option>
+                        </select>
+                        <span asp-validation-for="Term" class="text-danger"></span>
+                    </div>
+                    
+                    <!-- Product Type -->
+                    <div class="mb-4">
+                        <label asp-for="ProductType" class="form-label">Product type</label>
+                        <select asp-for="ProductType" class="form-control form-select">
+                            <option value="ProductA">Product A - Interest Free</option>
+                            <option value="ProductB">Product B - First 2 Months Free</option>
+                            <option value="ProductC">Product C - Standard</option>
+                        </select>
+                        <span asp-validation-for="ProductType" class="text-danger"></span>
+                    </div>
+                    
+                    <!-- Personal Information -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-2">
+                            <label asp-for="Title" class="form-label">Title</label>
+                            <select asp-for="Title" class="form-control form-select">
+                                <option value="Mr">Mr.</option>
+                                <option value="Mrs">Mrs.</option>
+                                <option value="Ms">Ms.</option>
+                                <option value="Dr">Dr.</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <label asp-for="FirstName" class="form-label">First name</label>
+                            <input asp-for="FirstName" class="form-control" placeholder="First name" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-5">
+                            <label asp-for="LastName" class="form-label">Last name</label>
+                            <input asp-for="LastName" class="form-control" placeholder="Last name" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <input asp-for="Email" class="form-control" placeholder="your.email@example.com" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Mobile" class="form-label">Mobile</label>
+                            <input asp-for="Mobile" class="form-control" placeholder="0422 111 333" />
+                            <span asp-validation-for="Mobile" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label asp-for="DateOfBirth" class="form-label">Date of Birth</label>
+                        <input asp-for="DateOfBirth" type="date" class="form-control" />
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                        <small class="text-muted">You must be at least 18 years old</small>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary btn-block mt-4">
+                        Submit Application
+                    </button>
+                    
+                    <p class="disclaimer">
+                        By submitting this application, you agree to our terms and conditions. 
+                        Your information will be used to process your loan application.
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.7/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        function updateAmount(value) {
+            document.getElementById('amountDisplay').textContent = '$' + parseInt(value).toLocaleString();
+            
+            // Update slider background gradient
+            const slider = document.getElementById('amountSlider');
+            const percentage = ((value - slider.min) / (slider.max - slider.min)) * 100;
+            slider.style.background = `linear-gradient(to right, #00BCD4 0%, #00BCD4 ${percentage}%, #E0E0E0 ${percentage}%, #E0E0E0 100%)`;
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const slider = document.getElementById('amountSlider');
+            updateAmount(slider.value);
+        });
+    </script>
+}

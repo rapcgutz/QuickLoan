@@ -17,4 +17,5 @@ public class CalculateQuotationQuery : IRequest<QuotationDto>
     public DateTime DateOfBirth { get; set; }
     public string Mobile { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+    public string? UserTimeZoneId { get; init; }
 }

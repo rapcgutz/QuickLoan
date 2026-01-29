@@ -1,6 +1,7 @@
 <Solution>
-  <Project Path="QuickLoan.Domain\QuickLoan.Domain.csproj" />
-  <Project Path="QuickLoan.Application\QuickLoan.Application.csproj" />
-  <Project Path="QuickLoan.Infrastructure\QuickLoan.Infrastructure.csproj" />
   <Project Path="QuickLoan.Api\QuickLoan.Api.csproj" />
+  <Project Path="QuickLoan.Application\QuickLoan.Application.csproj" />
+  <Project Path="QuickLoan.Domain\QuickLoan.Domain.csproj" />
+  <Project Path="QuickLoan.Infrastructure\QuickLoan.Infrastructure.csproj" />
+  <Project Path="QuickLoan.Web/QuickLoan.Web.csproj" Id="bff5b740-2563-49a5-90e3-a628655c9273" />
 </Solution>

@@ -1,0 +1,40 @@
+@model LoginRequest
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container" style="padding: 3rem 0;">
+    <div style="max-width: 500px; margin: 0 auto;">
+        <div class="card" style="border: 2px solid #00BCD4;">
+            <h2 style="color: #757575; font-weight: 400; text-align: center; margin-bottom: 2rem;">Login to Your Account</h2>
+            
+            <form asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Your email</label>
+                    <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+                    <span asp-validation-for="Email" class="text-danger" style="font-size: 0.875rem;"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" class="form-control" type="password" placeholder="Enter your password" />
+                    <span asp-validation-for="Password" class="text-danger" style="font-size: 0.875rem;"></span>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block" style="margin-top: 2rem;">Login</button>
+            </form>
+            
+            <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #E0E0E0;">
+                <p style="color: #757575; margin-bottom: 0.5rem;">Don't have an account?</p>
+                <a asp-action="Register" style="color: #00BCD4; text-decoration: none; font-weight: 500;">Register here</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
+}

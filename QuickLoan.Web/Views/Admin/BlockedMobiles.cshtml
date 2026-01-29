@@ -1,0 +1,80 @@
+@model List<BlockedMobileResponse>
+@{
+    ViewData["Title"] = "Blocked Mobiles";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 style="color: #424242; font-weight: 400;">Blocked Mobile Numbers</h2>
+        <a asp-action="Dashboard" class="btn btn-outline-primary">Back to Dashboard</a>
+    </div>
+    
+    <!-- Add New Block Form -->
+    <div class="card mb-4">
+        <h3 style="color: #424242; font-size: 1.25rem; margin-bottom: 1rem;">Block New Mobile</h3>
+        <form asp-action="BlockMobile" method="post">
+            @Html.AntiForgeryToken()
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <label class="form-label">Mobile Number</label>
+                    <input type="text" name="Mobile" class="form-control" placeholder="0422111333" required />
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">Reason (Optional)</label>
+                    <input type="text" name="Reason" class="form-control" placeholder="e.g., Fraud, Spam" />
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Block Mobile</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Blocked Mobiles List -->
+    <div class="card">
+        <h3 style="color: #424242; font-size: 1.25rem; margin-bottom: 1rem;">Currently Blocked (@Model.Count)</h3>
+        
+        @if (!Model.Any())
+        {
+            <div style="text-align: center; padding: 3rem; color: #757575;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📱</div>
+                <p>No blocked mobile numbers</p>
+            </div>
+        }
+        else
+        {
+            <div style="max-height: 500px; overflow-y: auto;">
+                <table class="table">
+                    <thead style="background: #FAFAFA; position: sticky; top: 0;">
+                        <tr>
+                            <th>Mobile Number</th>
+                            <th>Blocked At</th>
+                            <th>Blocked By</th>
+                            <th style="width: 120px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var mobile in Model)
+                        {
+                            <tr>
+                                <td style="font-family: monospace; font-weight: 500;">@mobile.Mobile</td>
+                                <td style="color: #757575;">@mobile.BlockedAt.ToString("dd MMM yyyy HH:mm")</td>
+                                <td style="color: #757575;">@mobile.BlockedBy</td>
+                                <td>
+                                    <form asp-action="UnblockMobile" method="post" style="display: inline;">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="mobile" value="@mobile.Mobile" />
+                                        <button type="submit" class="btn btn-sm btn-outline-primary" 
+                                                onclick="return confirm('Unblock @mobile.Mobile?')">
+                                            Unblock
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

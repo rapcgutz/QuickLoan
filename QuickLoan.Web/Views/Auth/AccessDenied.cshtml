@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-6 mx-auto text-center">
+            <div class="card">
+                <div style="font-size: 4rem; color: #dc3545; margin-bottom: 1rem;">🔒</div>
+                <h2 style="color: #424242; font-weight: 400; margin-bottom: 1rem;">Access Denied</h2>
+                <p style="color: #757575; font-size: 1.125rem; margin-bottom: 2rem;">
+                    You don't have permission to access this page.
+                </p>
+                <div class="d-flex gap-2 justify-content-center">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">Go Home</a>
+                    <a asp-controller="Auth" asp-action="Login" class="btn btn-primary">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

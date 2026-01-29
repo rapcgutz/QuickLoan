@@ -19,6 +19,9 @@ namespace QuickLoan.Application.Handlers.Commands
 
         public async Task<Unit> Handle(BlockDomainCommand request, CancellationToken cancellationToken)
         {
+            if(!IsValidDomain(request.Domain))
+                throw new InvalidOperationException("Invalid Domain.");
+
             if (await _blacklistRepo.IsMobileBlacklistedAsync(request.Domain))
                 throw new InvalidOperationException("Mobile is already blacklisted");
 
@@ -26,6 +29,37 @@ namespace QuickLoan.Application.Handlers.Commands
             await _blacklistRepo.AddBlacklistedDomainAsync(blacklistedDomain);
 
             return Unit.Value;
+        }
+
+        public static bool IsValidDomain(string domain)
+        {
+            if (string.IsNullOrWhiteSpace(domain))
+                return false;
+
+            domain = domain.Trim().ToLowerInvariant();
+
+            // Must NOT contain @
+            if (domain.Contains("@"))
+                return false;
+
+            // Must contain at least one dot
+            if (!domain.Contains('.'))
+                return false;
+
+            // No spaces
+            if (domain.Any(char.IsWhiteSpace))
+                return false;
+
+            try
+            {
+                // Validates DNS-safe format
+                var uri = new Uri($"http://{domain}");
+                return uri.Host == domain;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

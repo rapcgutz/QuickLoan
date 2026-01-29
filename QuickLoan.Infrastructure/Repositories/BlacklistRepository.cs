@@ -24,7 +24,7 @@ namespace QuickLoan.Infrastructure.Repositories
 
         public async Task<bool> IsDomainBlacklistedAsync(string domain)
         {
-            return await _context.BlacklistedDomains.AnyAsync(bd => bd.Domain == domain.ToLower());
+            return await _context.BlacklistedDomains.AnyAsync(bd => bd.Domain.ToLower() == domain.ToLower());
         }
 
         public async Task<List<string>> GetBlacklistedMobilesAsync()
@@ -51,6 +51,7 @@ namespace QuickLoan.Infrastructure.Repositories
 
         public async Task RemoveBlacklistedMobileAsync(string mobile)
         {
+
             var entity = await _context.BlacklistedMobiles.FirstOrDefaultAsync(bm => bm.Mobile == mobile);
             if (entity != null)
             {

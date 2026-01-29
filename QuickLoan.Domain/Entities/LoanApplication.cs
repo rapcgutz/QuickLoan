@@ -52,7 +52,7 @@ public class LoanApplication
         int term,
         ProductType productType,
         string applicationUrl,
-        Guid? userId = null)
+        Guid? userId)
     {
         ValidateInputs(firstName, lastName, mobile, email, amountRequired, term);
         

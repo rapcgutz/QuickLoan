@@ -1,0 +1,51 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container py-5">
+    <h2 style="color: #424242; font-weight: 400; margin-bottom: 2rem;">Admin Dashboard</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <!-- Loan Applications Card -->
+        <div class="card">
+            <div style="text-align: center;">
+                <div style="font-size: 3rem; color: #00BCD4; margin-bottom: 1rem;">📋</div>
+                <h3 style="color: #424242; font-size: 1.5rem; margin-bottom: 1rem;">Loan Applications</h3>
+                <p style="color: #757575; margin-bottom: 1.5rem;">
+                    View and manage all loan applications
+                </p>
+                <a asp-action="LoanApplications" class="btn btn-primary btn-block">
+                    Manage Loans
+                </a>
+            </div>
+        </div>
+        
+        <!-- Blocked Mobiles Card -->
+        <div class="card">
+            <div style="text-align: center;">
+                <div style="font-size: 3rem; color: #00BCD4; margin-bottom: 1rem;">📱</div>
+                <h3 style="color: #424242; font-size: 1.5rem; margin-bottom: 1rem;">Blocked Mobiles</h3>
+                <p style="color: #757575; margin-bottom: 1.5rem;">
+                    Manage blocked mobile numbers
+                </p>
+                <a asp-action="BlockedMobiles" class="btn btn-primary btn-block">
+                    Manage Mobiles
+                </a>
+            </div>
+        </div>
+        
+        <!-- Blocked Domains Card -->
+        <div class="card">
+            <div style="text-align: center;">
+                <div style="font-size: 3rem; color: #00BCD4; margin-bottom: 1rem;">🌐</div>
+                <h3 style="color: #424242; font-size: 1.5rem; margin-bottom: 1rem;">Blocked Domains</h3>
+                <p style="color: #757575; margin-bottom: 1.5rem;">
+                    Manage blocked email domains
+                </p>
+                <a asp-action="BlockedDomains" class="btn btn-primary btn-block">
+                    Manage Domains
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

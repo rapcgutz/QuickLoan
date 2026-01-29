@@ -8,7 +8,6 @@ namespace QuickLoan.Application.Commands
 {
     public class CreateLoanApplicationCommand : IRequest<Guid>
     {
-        public Guid UserId { get; set; }
         public decimal AmountRequired { get; set; }
         public int Term { get; set; }
         public ProductType ProductType { get; set; }

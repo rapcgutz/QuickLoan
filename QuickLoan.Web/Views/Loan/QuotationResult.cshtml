@@ -1,0 +1,73 @@
+@model QuotationResponse
+@{
+    ViewData["Title"] = "Your Quote";
+}
+
+<div class="container" style="padding: 3rem 0;">
+    <div class="quote-result-card">
+        <h2 class="quote-result-title">Your quote</h2>
+        
+        <!-- Your Information Section -->
+        <div class="info-section">
+            <div class="section-header">
+                <span class="section-title">Your information</span>
+                <a asp-controller="Loan" asp-action="Apply" class="edit-link">Edit</a>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Name</span>
+                <span class="info-value">@ViewBag.Request?.FirstName @ViewBag.Request?.LastName</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Mobile</span>
+                <span class="info-value">@ViewBag.Request?.Mobile</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Email</span>
+                <span class="info-value">@ViewBag.Request?.Email</span>
+            </div>
+        </div>
+        
+        <!-- Finance Details Section -->
+        <div class="info-section">
+            <div class="section-header">
+                <span class="section-title">Finance details</span>
+                <a asp-controller="Loan" asp-action="Apply" class="edit-link">Edit</a>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Finance amount</span>
+                <div style="text-align: right;">
+                    <span class="info-value-highlight">$@Model.AmountRequired.ToString("N0")</span>
+                    <span class="info-value-small">over @Model.Term months</span>
+                </div>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Repayments from</span>
+                <div style="text-align: right;">
+                    <span class="info-value-highlight">$@Model.MonthlyRepayment.ToString("N2")</span>
+                    <span class="info-value-small">Weekly</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Apply Now Button -->
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <form asp-controller="Loan" asp-action="Submit" method="get">
+                <button type="submit" class="btn btn-primary btn-block">Apply now</button>
+            </form>
+        }
+        else
+        {
+            <a asp-controller="Auth" asp-action="Login" asp-route-returnUrl="@Url.Action("Submit", "Loan")" class="btn btn-primary btn-block">
+                Apply now
+            </a>
+        }
+        
+        <!-- Disclaimer -->
+        <p class="disclaimer">
+            Total repayments $@Model.TotalRepayment.ToString("N2"), made up of an establishment fee of $@Model.EstablishmentFee.ToString("N2").
+            Interest of $@Model.TotalInterest.ToString("N2"). The repayment amount is based on the variables selected, 
+            is subject to our assessment and suitability and other important terms and conditions apply.
+        </p>
+    </div>
+</div>
