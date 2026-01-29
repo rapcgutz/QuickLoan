@@ -85,6 +85,27 @@ dotnet run
 
 5. Navigate to `https://localhost:5001` (or your configured port)
 
+## Setup Admin account
+
+### Register Admin Account
+## Use the following credentials to register or verify the default Admin account:
+- Email: `admin@quickloan.com`
+- Password: `Admin123!`
+  
+## Run this query to verify the user and role:
+`
+SELECT Id, Email, FirstName, LastName, Role
+FROM Users
+WHERE Email = 'admin@quickloan.com';
+`
+  
+## Update Role to Admin
+`
+UPDATE Users
+SET Role = '1'
+WHERE Email = 'admin@quickloan.com';
+`
+
 ## Solutions Structure
 <img width="349" height="190" alt="image" src="https://github.com/user-attachments/assets/53a61997-8dfb-44d4-9f15-acb552069001" />
 
@@ -109,5 +130,7 @@ dotnet run
 <img width="636" height="783" alt="image" src="https://github.com/user-attachments/assets/23a5cd38-1dd2-4dd4-810a-224503113d6f" />
 <img width="616" height="768" alt="image" src="https://github.com/user-attachments/assets/8cc0bfe5-afdb-4c8a-9b0a-8e6143bb6f61" />
 <img width="610" height="604" alt="image" src="https://github.com/user-attachments/assets/59a9bbfa-1a2c-479d-93f3-241c63db25f9" />
+
+
 
 
